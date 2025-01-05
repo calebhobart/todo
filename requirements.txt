@@ -1,2 +1,6 @@
 streamlit
-streamlit-extras 
+streamlit-extras
+streamlit-authenticator
+pymongo
+python-dotenv
+pyyaml 

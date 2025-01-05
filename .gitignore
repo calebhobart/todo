@@ -14,7 +14,10 @@ venv/
 
 # Local data
 todos.json
+clusterinfo.txt
+secret.py
 
 # IDE
+.env
 .vscode/
 .idea/ 
