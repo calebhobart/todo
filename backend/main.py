@@ -10,7 +10,7 @@ app = FastAPI(
 
 # Configure CORS
 origins = [
-    "http://localhost:3000",  # React/Next.js frontend
+    "http://localhost:3000",  # React/Next.js frontend - this does not exist yet
     "http://localhost:8000",  # FastAPI docs
 ]
 
