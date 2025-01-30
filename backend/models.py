@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional, List
+from datetime import datetime
 
 class Token(BaseModel):
     access_token: str
@@ -22,13 +23,27 @@ class User(UserBase):
 class UserInDB(User):
     hashed_password: str
 
+class ListBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+
+class ListCreate(ListBase):
+    pass
+
+class List(ListBase):
+    id: str
+    user_id: str
+    created_at: datetime
+
 class TodoBase(BaseModel):
     title: str
     completed: bool = False
+    list_id: Optional[str] = None
 
 class TodoCreate(TodoBase):
     pass
 
 class Todo(TodoBase):
     id: str
-    username: str 
+    user_id: str
+    created_at: datetime 
