@@ -43,7 +43,7 @@ class TodoBase(BaseModel):
 class TodoCreate(TodoBase):
     pass
 
-class Todo(TodoBase):
+class Todo(TodoCreate):
     id: str
-    user_id: str
+    username: str
     created_at: datetime 

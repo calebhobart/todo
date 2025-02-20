@@ -1,82 +1,151 @@
-# Streamlit Todo App
+# FastAPI Todo Backend API
 
-A feature-rich todo application built with Streamlit featuring user authentication and MongoDB storage.
+A feature-rich todo list backend API built with FastAPI, featuring JWT authentication and MongoDB storage.
 
 ## Features
-- Quick access todo list for non-authenticated users
-- User authentication and registration system
-- Individual todo lists for each user
-- Add todo items
-- Mark items as complete/incomplete 
-- Persistent storage in MongoDB
-- Clean and simple interface
-- Secure password hashing
-- Session management with cookies
+- User authentication with JWT tokens
+- Todo list management
+- Multiple todo lists per user
+- MongoDB integration
+- RESTful API design
+- API documentation with Swagger UI
+- Secure password hashing with bcrypt
+- CORS support for frontend integration
 
 ## Project Structure
 ```
 your_project/
-├── app.py           # Main Streamlit app
-├── auth.py          # Authentication related code
-├── database.py      # MongoDB functions
-├── components.py    # UI components like show_todo_list
-├── config.yaml      # Configuration file
-└── utils.py         # Utility functions
+├── backend/
+│   ├── __init__.py
+│   ├── main.py          # FastAPI app and router configuration
+│   ├── auth.py          # JWT authentication logic
+│   ├── database.py      # MongoDB functions
+│   ├── models.py        # Pydantic models
+│   ├── utils.py         # Utility functions
+│   └── routes/
+│       ├── __init__.py
+│       ├── auth.py      # Authentication endpoints
+│       ├── todos.py     # Todo management endpoints
+│       └── lists.py     # List management endpoints
+├── requirements.txt
+└── .env                 # Environment variables
 ```
 
 ## Setup
 1. Clone this repository
-2. Install requirements: `pip install -r requirements.txt`
-3. Create a `.env` file with your MongoDB connection string:
-   ```
-   MONGODB_URI=your_mongodb_connection_string
-   ```
-4. Configure users in `config.yaml`:
-   ```yaml
-   credentials:
-     usernames:
-       username:
-         email: user@email.com
-         password: hashed_password
-   cookie:
-     expiry_days: 30
-     key: your_key_here
-     name: cookie
-   ```
-5. Run the app: `streamlit run app.py`
 
-## Usage
-1. **Quick Todo List**
-   - Available immediately without login
-   - Changes persist during session
-   - Perfect for quick tasks
+2. Install requirements:
+```bash
+pip install -r requirements.txt
+```
 
-2. **User Account**
-   - Sign up with email and password
-   - Secure authentication
-   - Persistent todo storage
+3. Create a `.env` file with your configuration:
+```env
+MONGODB_URI=your_mongodb_connection_string
+SECRET_KEY=your_jwt_secret_key
+```
 
-3. **Todo Management**
-   - Add new todos
-   - Mark todos as complete/incomplete
-   - See completed items with strikethrough
+4. Start the server:
+```bash
+uvicorn backend.main:app --reload
+```
+
+## API Documentation
+Once running, access the interactive API documentation at:
+- Swagger UI: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc
+
+## API Endpoints
+
+### Authentication
+- `POST /auth/register` - Register new user
+- `POST /auth/token` - Login and get access token
+
+### Todo Lists
+- `GET /lists` - Get user's todo lists
+- `POST /lists` - Create new todo list
+
+### Todos
+- `GET /todos` - Get all todos
+- `POST /todos` - Create new todo
+- `GET /todos/{list_id}` - Get todos for specific list
+- `POST /todos/{list_id}` - Create todo in specific list
 
 ## Authentication
-- Users must log in to access their saved todo lists
-- Passwords are securely hashed
-- Session cookies maintain login state
-- User configuration stored in config.yaml
+The API uses JWT tokens for authentication:
 
-## Storage
-- Todo items stored in MongoDB
-- Each user has their own todo list
-- Changes persist between sessions
-- Default todos stored in session state
+1. Register a new user or login to get an access token
+2. Include the token in subsequent requests:
+```http
+Authorization: Bearer <your_access_token>
+```
+
+## Database Schema
+
+### Users
+- username (string)
+- email (string)
+- hashed_password (string)
+- full_name (string)
+
+### Lists
+- name (string)
+- description (string, optional)
+- user_id (string)
+- created_at (datetime)
+
+### Todos
+- title (string)
+- completed (boolean)
+- list_id (string)
+- user_id (string)
+- created_at (datetime)
 
 ## Development
 Built with:
-- Streamlit
+- FastAPI
 - MongoDB
+- PyJWT
+- Pydantic
 - Python-dotenv
-- PyYAML
-- Streamlit-Authenticator
+- Bcrypt
+
+## CORS Configuration
+The API is configured to accept requests from:
+- http://localhost:3000 (React/Next.js frontend)
+- http://localhost:8000 (FastAPI docs)
+
+## Error Handling
+The API uses standard HTTP status codes:
+- 200: Success
+- 201: Created
+- 400: Bad Request
+- 401: Unauthorized
+- 404: Not Found
+- 500: Internal Server Error
+
+## Security Features
+
+1. Password Hashing
+   - Passwords are hashed using bcrypt
+   - Implemented in utils.py
+
+2. JWT Authentication
+   - 30-minute token expiration
+   - Secure token validation
+   - Protected routes using FastAPI dependencies
+
+3. MongoDB Security
+   - Indexed collections for performance
+   - Proper data isolation between users
+   - Secure connection string handling
+
+## Contributing
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+MIT License

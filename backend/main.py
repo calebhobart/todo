@@ -31,6 +31,13 @@ app.include_router(
 
 app.include_router(
     todos.router,
+    prefix="/lists/{list_id}/todos",
+    tags=["Todos"]
+)
+
+# Add a new router for todo operations that don't need list_id
+app.include_router(
+    todos.todo_router,  # New router for individual todo operations
     prefix="/todos",
     tags=["Todos"]
 )
